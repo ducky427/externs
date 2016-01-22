@@ -97,11 +97,6 @@ grunt.registerTask('check-old', function() {
   exec("npm outdated", {silent:false});
 });
 
-grunt.registerTask('cljsbuild-prod', function() {
-  grunt.log.writeln("\nCleaning and building ClojureScript production files...");
-  exec("lein do clean, with-profile production cljsbuild once");
-});
-
 grunt.registerTask('default', ['setup']);
 
 // end module.exports
