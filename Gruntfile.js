@@ -86,6 +86,7 @@ grunt.registerTask('launch', function(file_name) {
 
   grunt.log.writeln("\nLaunching app...");
   var local_exe = exe[os];
+  process.env['ELECTRON_ENABLE_LOGGING'] = 'y'
   exec(path.join(electron_path, local_exe) + " app" + " " + file_name, {async:false});
 });
 
