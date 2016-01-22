@@ -1,0 +1,19 @@
+{
+  "name": "externs-electron",
+  "license": "Private",
+  "private": true,
+  "dependencies": {
+    "fs-extra": "^0.26.4",
+    "js-beautify": "^1.5.10",
+    "jsedn": "0.3.5",
+    "md5": "^2.0.0",
+    "nunjucks": "^2.3.0",
+    "string-template": "^1.0.0",
+    "sync-request": "^3.0.0"
+  },
+  "devDependencies": {
+    "grunt": "0.4.5",
+    "grunt-download-electron": "2.1.2",
+    "shelljs": "0.5.3"
+  }
+}
