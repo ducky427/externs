@@ -79,6 +79,7 @@ grunt.registerTask('launch', function(file_name) {
   const data = edn.parse(fs.readFileSync(file_name, 'utf8'));
   const lib_version = data.at(edn.kw(":lib-version"));
   const code_loc = format(data.at(edn.kw(":file")), {version: lib_version});
+  const code_loc_min = format(data.at(edn.kw(":file-min")), {version: lib_version});
 
   const file_contents = nunjucks.render('template/index.html', {name: data.at(edn.kw(":object")),
                                                                 scripts: [code_loc],
@@ -94,18 +95,25 @@ grunt.registerTask('launch', function(file_name) {
 
   const dir = path.dirname(file_name);
   request(code_loc, function (error, response, body) {
-    var code_hash = md5(body);
-    var build_contents = nunjucks.render('template/build.boot', {lib_version: lib_version,
-                                                                 version: data.at(edn.kw(":version")),
-                                            description: data.at(edn.kw(":description")),
-                                            url: data.at(edn.kw(":url")),
-                                            scm: data.at(edn.kw(":scm")),
-                                            code_loc: code_loc,
-                                            checksum: code_hash,
-                                            file: path.basename(code_loc),
-                                            "package": data.at(edn.kw(":package"))});
-    fs.writeFileSync(path.join(dir, 'build.boot'), build_contents, 'utf8');
-    done(error);
+    request(code_loc_min, function (error2, response2, body2) {
+      var code_hash = md5(body);
+      var code_hash_min = md5(body2);
+      var build_contents = nunjucks.render('template/build.boot', {lib_version: lib_version,
+                                                                   version: data.at(edn.kw(":version")),
+                                              description: data.at(edn.kw(":description")),
+                                              url: data.at(edn.kw(":url")),
+                                              scm: data.at(edn.kw(":scm")),
+                                              code_loc: code_loc,
+                                              code_loc_min: code_loc_min,
+                                              checksum: code_hash,
+                                              checksum_min: code_hash_min,
+                                              file: path.basename(code_loc),
+                                              file_min: path.basename(code_loc_min),
+                                              "package": data.at(edn.kw(":package"))});
+      fs.writeFileSync(path.join(dir, 'build.boot'), build_contents, 'utf8');
+      done(error);
+
+    });
   });
 
 });

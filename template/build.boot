@@ -22,7 +22,14 @@
               :checksum "{{ checksum }}")
    (sift      :move     { #"^{{ file }}"
                          "cljsjs/{{ package }}/development/{{ package }}.inc.js"})
+   {% if file_min %}
+   (download  :url      "{{ code_loc_min }}"
+              :checksum "{{ checksum_min }}")
+   (sift      :move     { #"^{{ file_min }}"
+                         "cljsjs/{{ package }}/production/{{ package }}.min.inc.js"})
+   {% else %}
    (minify :in "cljsjs/{{ package }}/development/{{ package }}.inc.js"
-           :out "cljsjs/{{ package }}/development/{{ package }}.min.inc.js")
+           :out "cljsjs/{{ package }}/production/{{ package }}.min.inc.js")
+   {% endif %}
    (sift      :include  #{ #"^cljsjs"})
    (deps-cljs :name     "cljsjs.{{ package }}")))
