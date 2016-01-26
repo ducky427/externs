@@ -1,15 +1,41 @@
 
-# externs-electron
+# externs
+
+This project can be used to generate and maintain Javascript foreign dependencies for ClojureScript using the excellent cljsjs/packages.
+
+This project is just a POC. Please don't use it, yet.
+
+I've shameless copied code for generating the externs from jmmk/javascript-externs-generator. My hat tip to [Michael](https://github.com/jmmk) for his work.
+
+## Rationale
+
+Maintaing externs for cljsjs/packages can be quite cumbersome. Quite often, they can be created using http://www.dotnetwise.com/Code/Externs/ or jmmk/javascript-externs-generator.
+
+I've created an app, which when given an appropriate edn file, can generate the necessary extern and the boot file for packages.
+
+An example edn file is:
+
+```clojure
+{:lib-version "4.12.0"
+ :version     "2"
+ :file        "https://cdnjs.cloudflare.com/ajax/libs/vis/{version}/vis.js"
+ :file-min    "https://cdnjs.cloudflare.com/ajax/libs/vis/4.12.0/vis.min.js"
+ :object      "vis"
+ :package     "vis"
+ :url         "http://visjs.org/"
+ :scm         "https://github.com/almende/vis"
+ :description "Dynamic, browser-based visualization library"}
+```
 
 ## Requirements
 
 * JDK 1.7+
 * Leiningen 2.5.3
-* node.js 5.1.1 [This is done to match the verion of node.js being used in Electron v0.36.4]
+* node.js 5.1.1 [This is done to match the verion of node.js being used in Electron v0.36.5]
 
 On Mac/Linux, installing node.js using [Node Version Manager](https://github.com/creationix/nvm) is recommended.
 
-This project uses Electron v0.36.4. Please check [Electron's GitHub page](https://github.com/atom/electron) for the latest version. The version is specified in `Gruntfile.js` under the `Grunt Config` section.
+This project uses Electron v0.36.5. Please check [Electron's GitHub page](https://github.com/atom/electron) for the latest version. The version is specified in `Gruntfile.js` under the `Grunt Config` section.
 
 ## Setup
 
@@ -25,7 +51,7 @@ On Windows:
 scripts\setup.bat
 ```
 
-This will install the node dependencies for the project, along with grunt and bower and will also run `grunt setup`.
+This will install the node dependencies for the project, along with grunt and will also run `grunt setup`.
 
 
 ## Running the app
@@ -42,22 +68,12 @@ Now launch the electron app with the parameter of `data.edn`:
 grunt launch:data.edn
 ```
 
-## Grunt commands
+## Sample usage
 
-To run a command, type `grunt <command>` in the terminal.
-
-
-| Command       | Description                                                                               |
-|---------------|-------------------------------------------------------------------------------------------|
-| setup         | Download electron project, installs bower dependencies and setups up the app config file. |
-| launch        | Launches the electron app                                                                 |
-| outdated      | List all outdated clj/cljs/node/bower dependencies                                        |
-
-## Leiningen commands
-
-To run a command, type `lein <command>` in the terminal.
-
-| Command       | Description                                                                               |
-|---------------|-------------------------------------------------------------------------------------------|
-| cljfmt fix    | Auto-formats all clj/cljs code. See [cljfmt](https://github.com/weavejester/cljfmt)       |
-| kibit         | Statically analyse clj/cljs and give suggestions                                          |
+```
+git clone https://github.com/ducky427/packages packages
+git clone https://github.com/ducky427/externs
+cd externs
+grunt cljsbuild-prod
+grunt launch:../packages/vis/data.edn
+```

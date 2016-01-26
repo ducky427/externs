@@ -24,7 +24,7 @@ const exe = {
 };
 
 const electron_path = "electron";
-const electron_version = "0.36.4";
+const electron_version = "0.36.5";
 
 //------------------------------------------------------------------------------
 // ShellJS
