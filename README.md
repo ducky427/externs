@@ -9,7 +9,7 @@ I've shameless copied code for generating the externs from jmmk/javascript-exter
 
 ## Rationale
 
-Maintaing externs for cljsjs/packages can be quite cumbersome. Quite often, they can be created using http://www.dotnetwise.com/Code/Externs/ or jmmk/javascript-externs-generator.
+Maintaing externs for [cljsjs/packages](https://github.com/cljsjs/packages) can be quite cumbersome. Quite often, they can be created using http://www.dotnetwise.com/Code/Externs/ or [jmmk/javascript-externs-generator](https://github.com/jmmk/javascript-externs-generator).
 
 I've created an app, which when given an appropriate edn file, can generate the necessary extern and the boot file for packages.
 
