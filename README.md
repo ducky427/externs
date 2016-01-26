@@ -51,7 +51,6 @@ To run a command, type `grunt <command>` in the terminal.
 |---------------|-------------------------------------------------------------------------------------------|
 | setup         | Download electron project, installs bower dependencies and setups up the app config file. |
 | launch        | Launches the electron app                                                                 |
-| release       | Creates a Win/OSX/Linux executables                                                       |
 | outdated      | List all outdated clj/cljs/node/bower dependencies                                        |
 
 ## Leiningen commands

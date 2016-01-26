@@ -33,9 +33,10 @@
   var extern = beautify(externs_electron.core.extract(obj_name), beautifier_opts);
   extern = `//Generated using externs-electron app\n\n${extern}`;
 
-  var output_folder = path.join(dir, 'resources', 'cljs', package_name, 'common');
-  fs.ensureDirSync(output_folder);
-  fs.writeFileSync(path.join(output_folder, package_name + ".ext.js"), extern, "utf8");
+  var output_ext_folder = path.join(dir, 'resources', 'cljs', package_name, 'common');
+  fs.ensureDirSync(output_ext_folder);
+  fs.writeFileSync(path.join(output_ext_folder, package_name + ".ext.js"), extern, "utf8");
+
   ipc.send('close-app');
   </script>
 </body>

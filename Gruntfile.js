@@ -6,6 +6,8 @@ const path = require('path');
 const nunjucks = require('nunjucks');
 const edn = require("jsedn");
 const format = require("string-template")
+const request = require('request');
+const md5 = require('md5');
 
 const os = (function(){
   var platform = process.platform;
@@ -75,8 +77,8 @@ grunt.registerTask('cljsbuild-prod', function() {
 
 grunt.registerTask('launch', function(file_name) {
   const data = edn.parse(fs.readFileSync(file_name, 'utf8'));
-  const version = data.at(edn.kw(":version"));
-  const code_loc = format(data.at(edn.kw(":file")), {version: version});
+  const lib_version = data.at(edn.kw(":lib-version"));
+  const code_loc = format(data.at(edn.kw(":file")), {version: lib_version});
 
   const file_contents = nunjucks.render('template/index.html', {name: data.at(edn.kw(":object")),
                                                                 scripts: [code_loc],
@@ -88,6 +90,24 @@ grunt.registerTask('launch', function(file_name) {
   var local_exe = exe[os];
   process.env['ELECTRON_ENABLE_LOGGING'] = 'y'
   exec(path.join(electron_path, local_exe) + " app" + " " + file_name, {async:false});
+  var done = this.async();
+
+  const dir = path.dirname(file_name);
+  request(code_loc, function (error, response, body) {
+    var code_hash = md5(body);
+    var build_contents = nunjucks.render('template/build.boot', {lib_version: lib_version,
+                                                                 version: data.at(edn.kw(":version")),
+                                            description: data.at(edn.kw(":description")),
+                                            url: data.at(edn.kw(":url")),
+                                            scm: data.at(edn.kw(":scm")),
+                                            code_loc: code_loc,
+                                            checksum: code_hash,
+                                            file: path.basename(code_loc),
+                                            "package": data.at(edn.kw(":package"))});
+    fs.writeFileSync(path.join(dir, 'build.boot'), build_contents, 'utf8');
+    done(error);
+  });
+
 });
 
 grunt.registerTask('check-old', function() {
