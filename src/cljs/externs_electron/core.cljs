@@ -11,16 +11,19 @@
       (fn? obj)))
 
 (defn build-tree [obj name]
-  {:name name
-   :type (get-type obj)
-   :props (for [k (js-keys obj)
-                :let [child (aget obj k)]]
-            (if (and (parent-type? child)
-                     (not (identical? obj child)))
-              (build-tree child k)
-              {:name k :type (get-type child)}))
-   :prototype (for [k (js-keys (.-prototype obj))]
-                {:name k :type :function})})
+  (let [proto     (.-prototype obj)]
+    {:name      name
+     :type      (get-type obj)
+     :props     (for [k (js-keys obj)
+                      :let [child (aget obj k)]]
+                  (if (and (parent-type? child)
+                         (not (identical? obj child)))
+                    (build-tree child k)
+                    {:name k :type (get-type child)}))
+     :prototype (if proto
+                  (for [k (.keys js/Object proto)]
+                    {:name k :type :function})
+                  [])}))
 
 (defn build-function [name]
   (str (quote-string name) ": function () {}"))
